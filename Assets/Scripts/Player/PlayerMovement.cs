@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         direction = new Vector3(x, 0, z).normalized;
-        playerAnimation.SetFloat("vertical", z);
+        playerAnimation.SetFloat("vertical", Mathf.Abs(z));
         if (direction.magnitude > 0.1f)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.eulerAngles.y;
