@@ -5,10 +5,13 @@ using UnityEngine.AI;
 
 public class DemonController : MonoBehaviour
 {
-    private GameObject Player;
     [SerializeField]private NavMeshAgent agent;
+    
+    private GameObject Player;
     private Animator demonAnime;
+    private Rigidbody rb;
     private bool isDead = false;
+    private float turnSmoothVelocity;
     
     public LayerMask WhatIsGround, WhatIsPlayer;
     public float CurrentHealth;
@@ -16,6 +19,7 @@ public class DemonController : MonoBehaviour
     public float WalkPointRange;
     public float timeBetweenAttack;
     public float sightRange, attackRange;
+    public float rotationSmooth = 10;
 
     [SerializeField]private bool walkPointSet;
     [SerializeField]private bool alreadyAttacked;
@@ -28,13 +32,16 @@ public class DemonController : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player");
         agent = this.GetComponent<NavMeshAgent>();
         demonAnime = this.GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
         CurrentHealth = maxHealth;
     }
 
+    float distanceFromPlayer = 0;
     private void Update()
     {
         isPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, WhatIsPlayer);
         isPlayerInSightRange = Physics.CheckSphere(transform.position, sightRange, WhatIsPlayer);
+        distanceFromPlayer = Vector3.Distance(transform.position, Player.transform.position);
         if (isDead)
         {
             transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
@@ -44,7 +51,7 @@ public class DemonController : MonoBehaviour
         {
             if (!isPlayerInAttackRange && !isPlayerInSightRange) Petrolling();
             if (isPlayerInSightRange && !isPlayerInAttackRange) ChasePlayer();
-            if (isPlayerInAttackRange && isPlayerInSightRange) AttackPlayer();
+            if (isPlayerInAttackRange && isPlayerInSightRange && distanceFromPlayer<attackRange/2) AttackPlayer();
         }
     }
 
@@ -56,7 +63,7 @@ public class DemonController : MonoBehaviour
         {
             this.agent.SetDestination(walkPoint);
             demonAnime.SetBool("run",true);
-            transform.LookAt(walkPoint);
+            lookAtWalkPoint();
         }
 
             Vector3 distanceToWalkPoint = transform.position - walkPoint;
@@ -79,14 +86,23 @@ public class DemonController : MonoBehaviour
     private void ChasePlayer()
     {
         agent.SetDestination(Player.transform.position);
-        transform.LookAt(Player.transform.position);
+        lookAtPlayer();
         demonAnime.SetBool("run", true);
+    }
+
+    void lookAtPlayer()
+    {
+        if (agent.velocity.magnitude > 0)
+        {
+            float targetAngle = Mathf.Atan2(agent.velocity.x, agent.velocity.z) * Mathf.Rad2Deg;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, rotationSmooth);
+            transform.rotation = Quaternion.Euler(0, angle, 0);
+        }
     }
     private void AttackPlayer()
     {
         demonAnime.SetBool("run", false);
         agent.SetDestination(transform.position);
-
         transform.LookAt(Player.transform.position);
 
         if (!alreadyAttacked)
@@ -96,6 +112,16 @@ public class DemonController : MonoBehaviour
             demonAnime.SetTrigger("attack");
             alreadyAttacked = true;
             Invoke(nameof(resetAttack), timeBetweenAttack);
+        }
+    }
+
+    public void lookAtWalkPoint()
+    {
+        if (agent.velocity.magnitude > 0)
+        {
+            float targetAngle = Mathf.Atan2(agent.velocity.x, agent.velocity.z) * Mathf.Rad2Deg;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, rotationSmooth);
+            transform.rotation = Quaternion.Euler(0, angle, 0);
         }
     }
     private void resetAttack()

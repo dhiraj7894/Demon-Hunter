@@ -7,6 +7,7 @@ public class DemonHealth : MonoBehaviour
 {
     private DemonController demonCon;
     [SerializeField] private Slider healthBar;
+    public int TakeDamageByPlayer = 10;
 
     void Start()
     {
@@ -25,7 +26,7 @@ public class DemonHealth : MonoBehaviour
         if (other.gameObject.CompareTag("Sword"))
         {
             healthBar.gameObject.SetActive(true);
-            demonCon.takeDamage(5);
+            demonCon.takeDamage(TakeDamageByPlayer);
         }
     }
 

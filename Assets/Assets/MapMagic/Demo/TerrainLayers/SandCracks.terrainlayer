@@ -8,7 +8,7 @@ TerrainLayer:
   m_PrefabAsset: {fileID: 0}
   m_Name: SandCracks
   m_DiffuseTexture: {fileID: 2800000, guid: daee198857f519c458551e729a92adc7, type: 3}
-  m_NormalMapTexture: {fileID: 2800000, guid: 978e11152c6b6844f81a7510de6195e0, type: 3}
+  m_NormalMapTexture: {fileID: 0}
   m_MaskMapTexture: {fileID: 2800000, guid: 8cae174615e65bd4ea73ae80637951ed, type: 3}
   m_TileSize: {x: 30, y: 30}
   m_TileOffset: {x: 0, y: 0}

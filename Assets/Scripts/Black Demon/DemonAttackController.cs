@@ -5,7 +5,7 @@ using UnityEngine;
 public class DemonAttackController : MonoBehaviour
 {
 
-    public SphereCollider hitCollider;
+    public CapsuleCollider hitCollider;
     void Start()
     {
         hitCollider.enabled = false;

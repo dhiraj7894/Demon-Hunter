@@ -2452,7 +2452,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8346562346149030758}
-  - component: {fileID: 1788142207}
+  - component: {fileID: 16913622444206157}
   m_Layer: 0
   m_Name: mixamorig:RightHand
   m_TagString: Black Demon Claw
@@ -2479,19 +2479,20 @@ Transform:
   m_Father: {fileID: 5328321413849194758}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0.19198895, y: 51.268917, z: 0.08005338}
---- !u!135 &1788142207
-SphereCollider:
+--- !u!136 &16913622444206157
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5750814909281663407}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.2
-  m_Center: {x: 0, y: 0.3, z: 0}
+  m_Radius: 0.10000001
+  m_Height: 0.79916847
+  m_Direction: 1
+  m_Center: {x: 0.000000048223274, y: -0.034490913, z: -0.00000015180485}
 --- !u!1 &5813175538857285127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3440,11 +3441,11 @@ MonoBehaviour:
   WhatIsPlayer:
     serializedVersion: 2
     m_Bits: 2048
-  CurrentHealth: 64
+  CurrentHealth: 65
   maxHealth: 75
   WalkPointRange: 5
   timeBetweenAttack: 0.5
-  sightRange: 7
+  sightRange: 15
   attackRange: 1.2
   walkPointSet: 0
   alreadyAttacked: 0
@@ -3555,7 +3556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13cf8a9540002964ea19cbf72d57ef23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitCollider: {fileID: 1788142207}
+  hitCollider: {fileID: 16913622444206157}
 --- !u!1 &7529592562113287912
 GameObject:
   m_ObjectHideFlags: 0

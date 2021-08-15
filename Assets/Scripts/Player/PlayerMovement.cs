@@ -9,10 +9,20 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 direction;
 
     public Transform Camera;
+    public Transform GroundChecker;
+
+    public LayerMask GroundMask;
+
     public float rotationSmooth = 10;
     public float speed = 5;
+    public float jumpForce = 100;
 
     float turnSmoothVelocity;
+    float gravity = -9.8f;
+
+    Vector3 velocity;
+
+    public bool isGrounded = false;
     void Start()
     {
         playerAnimation = GetComponent<Animator>();
@@ -23,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Move();
-
+        jump();
     }
     private void Move()
     {
@@ -48,5 +58,30 @@ public class PlayerMovement : MonoBehaviour
         {
             playerAnimation.SetBool("run", false);
         }
+    }
+
+    void jump()
+    {
+        isGrounded = Physics.CheckSphere(GroundChecker.position, 0.2f, GroundMask);
+
+        if (isGrounded && velocity.y <0)
+        {
+            velocity.y = -2f;
+        }
+
+
+        if (Input.GetButtonDown("Jump") && playerAnimation.GetFloat("vertical") <= 0.1f)
+        {
+            playerAnimation.SetTrigger("jump");
+            velocity.y = Mathf.Sqrt(jumpForce * -2 * gravity);
+        }
+        if (Input.GetButtonDown("Jump") && playerAnimation.GetFloat("vertical") >= 0.1f)
+        {
+            playerAnimation.SetTrigger("vault");
+            velocity.y = Mathf.Sqrt(jumpForce * -2 * gravity);
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
 }

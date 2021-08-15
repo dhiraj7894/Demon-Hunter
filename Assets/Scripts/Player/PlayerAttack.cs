@@ -14,6 +14,8 @@ public class PlayerAttack : MonoBehaviour
 
     public float shakeElapsedTime = 0f;
 
+    public float slowDownFactor = 0.2f;
+
     private Animator playerAnimation;
     private bool comboPossible=false;
     private int comboStep=0;
@@ -37,6 +39,15 @@ public class PlayerAttack : MonoBehaviour
         {
             playerAnimation.SetBool("shield", false);
         }
+        multiAttack();
+    }
+    
+    void multiAttack()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            playerAnimation.SetTrigger("MultiAttack");
+        }
     }
 
     public void Attack()
@@ -44,7 +55,8 @@ public class PlayerAttack : MonoBehaviour
         if (comboStep == 0)
         {
             //playerAnimation.Play("AttackA");
-            playerAnimation.SetTrigger("AttackA");
+            if(!playerAnimation.GetCurrentAnimatorStateInfo(0).IsName("AttackA"))
+                playerAnimation.SetTrigger("AttackA");
             comboStep = 1;
             return;
         }
@@ -71,15 +83,27 @@ public class PlayerAttack : MonoBehaviour
     {
         if (comboStep == 2)
         {
-            playerAnimation.Play("AttackB");
+            if (!playerAnimation.GetCurrentAnimatorStateInfo(0).IsName("AttackB"))
+                playerAnimation.Play("AttackB");
 
         }
 
         if (comboStep == 3)
         {
-            playerAnimation.Play("AttackC");
+            if (!playerAnimation.GetCurrentAnimatorStateInfo(0).IsName("AttackC"))
+                playerAnimation.Play("AttackC");
 
         }
+    }
+
+    public void slowTime()
+    {
+        Time.timeScale = slowDownFactor;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+    }
+    public void timeReset()
+    {
+        Time.timeScale = 1;
     }
 
     public void ComboReset()
